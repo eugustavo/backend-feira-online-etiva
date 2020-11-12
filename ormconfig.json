@@ -1,0 +1,17 @@
+{
+  "type": "postgres",
+  "host": "motty.db.elephantsql.com",
+  "port": 5432,
+  "username": "pasgvtdb",
+  "password": "8LECH8Lsd4VqPhJ7Six4TAA6juaulNwB",
+  "database": "pasgvtdb",
+  "entities": [
+     "src/models/*.ts"
+  ],
+  "migrations": [
+     "src/database/migrations/*.ts"
+  ],
+  "cli": {
+    "migrationsDir": "./src/database/migrations"
+  }
+}
