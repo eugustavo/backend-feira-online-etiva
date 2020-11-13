@@ -7,7 +7,15 @@ export default {
   async index (request: Request, response: Response) {
     const productRepository = getRepository(Product);
 
-    const products = await productRepository.find();
+    const products = await productRepository.find({
+      relations: ['images']
+    });
+
+    products.map(product => {
+      product.images.map(image => {
+        image.path = `http://localhost:3333/uploads/${image.path}`
+      })
+    })
 
     return response.status(200).json(products)
   },
@@ -17,17 +25,28 @@ export default {
 
     const productRepository = getRepository(Product);
 
-    const product = await productRepository.findOne(id);
+    const product = await productRepository.findOne(id, {
+      relations: ['images']
+    });
 
     if(!product) {
       return response.status(400).json({ message: 'Product not found' });
     }
+
+    product.images?.map(image => {
+      image.path = `http://localhost:3333/uploads/${image.path}`
+    })
 
     return response.status(200).json(product)
   },
 
   async create (request: Request, response: Response) {
     const { name, description, price, user_id } = request.body;
+
+    const requestImages = request.files as Express.Multer.File[];
+    const images = requestImages.map(image => {
+      return { path: image.filename }
+    })
 
     const productRepository = getRepository(Product);
 
@@ -36,6 +55,7 @@ export default {
       description,
       price,
       user_id,
+      images
     });
 
     await productRepository.save(product);

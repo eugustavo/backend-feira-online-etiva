@@ -1,6 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
 
 import User from './User';
+import Image from './Image';
 
 @Entity('products')
 export default class Product {
@@ -22,4 +23,10 @@ export default class Product {
   @ManyToOne(() => User, user => user.id, { eager: true })
   @JoinColumn({ name: 'user_id' })
   user: User;
+
+  @OneToMany(() => Image, image => image.product, {
+    cascade: ['insert', 'update']
+  })
+  @JoinColumn({ name: 'product_id'})
+  images: Image[];
 }
